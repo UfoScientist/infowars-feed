@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Feed Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            padding: 20px;
+        }
+        .rss-container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .rss-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .rss-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .rss-item:last-child {
+            border-bottom: none;
+        }
+        .rss-item h3 {
+            margin: 0;
+            color: #333;
+        }
+        .rss-item a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .rss-item p {
+            margin: 5px 0;
+        }
+        .rss-date {
+            color: gray;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rss-container" id="rss-feed">
+        <div class="rss-header">
+            <h2>Latest News</h2>
+        </div>
+    </div>
+
+    <script>
+        async function loadRSS() {
+            try {
+                const response = await fetch('rss.xml'); // Fetch the RSS file
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(text, "application/xml");
+
+                const channelTitle = xml.querySelector("channel > title").textContent;
+                const channelDesc = xml.querySelector("channel > description").textContent;
+                const channelLink = xml.querySelector("channel > link").textContent;
+
+                let headerHTML = `
+                    <div class="rss-header">
+                        <h2><a href="${channelLink}" target="_blank">${channelTitle}</a></h2>
+                        <p>${channelDesc}</p>
+                    </div>
+                `;
+
+                const items = xml.querySelectorAll("item");
+                let html = '';
+
+                items.forEach(item => {
+                    const title = item.querySelector("title").textContent;
+                    const link = item.querySelector("link").textContent;
+                    const description = item.querySelector("description").textContent;
+                    const pubDate = item.querySelector("pubDate").textContent;
+
+                    html += `
+                        <div class="rss-item">
+                            <h3><a href="${link}" target="_blank">${title}</a></h3>
+                            <p class="rss-date">${new Date(pubDate).toLocaleString()}</p>
+                            <p>${description}</p>
+                        </div>
+                    `;
+                });
+
+                document.getElementById("rss-feed").innerHTML = headerHTML + html;
+            } catch (error) {
+                console.error("Error loading RSS feed:", error);
+                document.getElementById("rss-feed").innerHTML = "<p>Failed to load RSS feed.</p>";
+            }
+        }
+
+        loadRSS();
+    </script>
+
+</body>
+</html>
