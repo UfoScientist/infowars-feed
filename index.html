@@ -57,7 +57,7 @@
     <script>
         async function loadRSS() {
             try {
-                const response = await fetch('rss.xml'); // Fetch the RSS file
+                const response = await fetch('https://www.infowars.com/rss.xml'); // Fetch the RSS file
                 const text = await response.text();
                 const parser = new DOMParser();
                 const xml = parser.parseFromString(text, "application/xml");
