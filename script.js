@@ -30,11 +30,11 @@ async function loadRSS() {
             <div class="rss-item">
                 <h3><a href="${link}" target="_blank">${title}</a></h3>
                 <p class="rss-date">
-                    ${pubDate ? new Date(new Date(pubDate).getTime() + (7 * 60 * 60 * 1000)).toLocaleString() : "No Date"}
+                    ${pubDate ? new Date(new Date(pubDate).getTime() + (6 * 60 * 60 * 1000)).toLocaleString() : "No Date"}
                 </p>
                 <p>${description}</p>
             </div>
-        `;
+            `;
         }
 
         document.getElementById("rss-feed").innerHTML = headerHTML + html;
