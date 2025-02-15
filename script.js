@@ -44,8 +44,7 @@ async function loadRSS() {
     }
 }
 
-// Run on page load
-loadRSS();
-
-// Auto-refresh every 5 minutes
-setInterval(loadRSS, 5 * 60 * 1000);
+document.addEventListener("DOMContentLoaded", () => {
+    loadRSS();
+    setInterval(loadRSS, 5 * 60 * 1000);
+});
